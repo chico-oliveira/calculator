@@ -1,0 +1,27 @@
+/*
+#######
+Imports
+#######
+*/
+
+
+/* 
+#########
+Variables
+#########
+*/
+
+
+/*
+###########
+Base styles
+###########
+*/
+
+html, body {
+    width: 100%;
+  }
+  
+.content {
+  min-height: 100%;
+}
