@@ -19,9 +19,111 @@ Base styles
 */
 
 html, body {
-    width: 100%;
-  }
-  
+  width: 100%;
+}
+
+body {
+  height: 100vh;
+}
+
 .content {
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 8vw;
+}
+
+/* 
+################
+Main styles
+################
+*/
+
+/** Header section
+*/
+
+header {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+/** Main section
+*/
+
+main {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.calculator, .calculator > * {
+  border-width: 2px;
+}
+
+sup {
+  font-size: x-small;
+}
+
+.calculator {
+  padding: 20px;
+  padding-top: 60px;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-gap: 5px;
+  align-items: center;
+}
+
+.display {
+  grid-column: 1 / span 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 5px;
+  gap: 10px;
+}
+
+.operation {
+  font-size: 1vw;
+}
+
+.current {
+  font-size: 2vw;
+}
+
+.calculator > div:not(:first-child) {
+  width: 70px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/** Footer section
+*/
+
+footer {
+  margin-top: 28px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: bold;
+}
+
+footer img {
+  width: 28px;
+  padding-right: 6px;
+}
+
+footer a {
+  display: flex;
+  align-items: center;
 }
