@@ -42,32 +42,23 @@ function pressingKey(e){
 }
 
 function pressingButton(button) {
-  let buttonClass = button.classList;
-
-  // Delete button
-  if (buttonClass.contains("delete")){
-    Delete();
-  }
-  // Clear button
-  else if (buttonClass.contains("clear")){
-    Clear();
-    displayString = "0";
-  }
-  // Checks if maximum number of digits has been input before inserting more values
-  else if(displayString.length <= 12){
-    // Number Button
-    if (buttonClass.contains("number")){
-      addNumber(button);
-    }
-    // Decimal Button
-    else if (buttonClass.contains("decimal")){
+  // Checks what class of button was pressed
+  switch(button.getAttribute("class")) {
+    case "delete":  
+      Delete();
+      break;
+    case "clear":
+      Clear();
+      break;
+    case "decimal":
       addDecimal(button);
-    }
-    // One of the Mathematical Operators
-    else {
+      break;
+    case "number":
+      addNumber(button);
+      break;
+    case "operator":
       addOperator(button);
-    }
-  }
+  }  
   updateDisplay();
 }
 
@@ -87,17 +78,19 @@ function Clear(){
 }
 
 function addNumber(button){
-  if (displayString === "0"){
-    displayString = button.textContent;
-  }
-  else {
-    displayString += button.textContent;
+  if (!maxDisplay()){
+    if (displayString === "0"){
+      displayString = button.textContent;
+    }
+    else {
+      displayString += button.textContent;
+    }
   }
 }
 
 // Only adds decimal point if one doesn't already exist
 function addDecimal(button) {
-    if (!displayString.includes(".")){
+    if (!displayString.includes(".") && !maxDisplay()){
       displayString += button.textContent;
     }
 }
@@ -196,3 +189,7 @@ function FirstFactorial(num) {
   return (num === 1 ? 1 : num * FirstFactorial(num - 1));
 }
 // FACTORIAL //
+
+function maxDisplay() {
+  return displayString.length >= 12;
+}
