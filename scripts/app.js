@@ -2,83 +2,181 @@
 // VARIABLES //
 ///////////////
 
+let displayString = "0";
+let previousString = "";
+let currentValue;
+let previousValue;
+let operation;
+
+const currentDisplay = document.querySelector(".current");
+const operationDisplay = document.querySelector(".operation");
+const buttons = document.querySelectorAll("button");
 
 /////////////////
 // DOM METHODS //
 /////////////////
 
+buttons.forEach(button => {
+  button.addEventListener('click', pressingButton);
+});
 
 ///////////////
 // FUNCTIONS //
 ///////////////
 
-
-function operate(operator, values) {
-    let answer = 0;
-
-    switch(operator) {
-        case "÷":
-            answer = divide(values);
-            break;
-        case "*":
-            answer = multiply(values);
-            break;
-        case "+":
-            answer = add(values);
-            break;
-        case "-":
-            answer = subtract(values);
-            break;
-        case "^":
-            answer = power(values);
-            break;
-        case "!":
-            answer = factorial(values);
-    }  
-    console.log(answer);
+// Initialize first grid after DOM and CSS finishes loading
+window.onload = () => {
+  updateDisplay();
 }
 
-const add = function(values) {
-  let added = values[0] + values[1];
-  return added;
-};
+function pressingButton(e) {
+  let currentButton = e.target.classList;
 
-const subtract = function(values) {
-  let subtracted = values[0] - values [1];
-  return subtracted;
-};
-
-const multiply = function(values) {
-  let multiplied = values[0];
-  for (let i=1; i<values.length; i++){
-    multiplied *= values[i];
+  // Delete button
+  if (currentButton.contains("delete")){
+    Delete();
   }
-  return multiplied;
-};
-
-const divide = function(values) {
-  let divided = values[0];
-  for (let i=1; i<values.length; i++){
-    divided /= values[i];
+  // Clear button
+  else if (currentButton.contains("clear")){
+    Clear();
+    displayString = "0";
   }
-  return divided;
+  // Checks if maximum number of digits has been input before inserting more values
+  else if(displayString.length <= 12){
+    // Number Button
+    if (currentButton.contains("number")){
+      addNumber(e);
+    }
+    // Decimal Button
+    else if (currentButton.contains("decimal")){
+      addDecimal(e);
+    }
+    // One of the Mathematical Operators
+    else {
+      addOperator(e);
+    }
+  }
+  updateDisplay();
+}
+
+// Deletes values and changes to 0 if last digit is deleted
+function Delete(){
+  if (displayString.length > 1){
+    displayString = displayString.slice(0, -1);
+  }
+  else {
+    displayString = "0";
+  }
+}
+
+function Clear(){
+  displayString = "0";
+  previousString = "";
+}
+
+function addNumber(e){
+  if (displayString === "0"){
+    displayString = e.target.textContent;
+  }
+  else {
+    displayString += e.target.textContent;
+  }
+}
+
+// Only adds decimal point if one doesn't already exist
+function addDecimal(e) {
+    if (!displayString.includes(".")){
+      displayString += e.target.textContent;
+    }
+}
+
+function addOperator(e) {
+  // Adds current value to previous value
+  previousValue = currentValue;
+
+  let operatorID = e.target.getAttribute('id');
+
+  // Attributes different operator values depending on which button got pressed
+  if (operatorID === "factorial"){
+    operator = "!";
+  }
+  else if (operatorID === "power"){
+    operator = "^"
+  }
+  else {
+    operator = e.target.textContent;
+  }
+
+  // Passes current display to previous display
+  displayString += operator;
+  previousString = `${displayString}`;
+
+  // Resets current value
+  displayString = "0";
+}
+
+// Updates calculator display
+function updateDisplay(){
+  currentValue = parseFloat(displayString);
+  operationDisplay.textContent = previousString;
+  currentDisplay.textContent = displayString;
+}
+
+// Calls different functions depending on operator
+function operate() {
+  let answer = 0;
+      
+  switch(operator) {
+    case "÷":
+        answer = divide(currentValue, previousValue);
+        break;
+    case "*":
+        answer = multiply(currentValue, previousValue);
+        break;
+    case "+":
+        answer = add(currentValue, previousValue);
+        break;
+    case "-":
+        answer = subtract(currentValue, previousValue);
+        break;
+    case "^":
+        answer = power(currentValue, previousValue);
+        break;
+    case "!":
+        answer = factorial(currentValue);
+  }  
+  console.log(answer);
+}
+
+// Mathematic Functions
+const add = function(a, b) {
+  return a + b;
 };
 
-const power = function(values) {
-  let powered = Math.pow(values[0], values[1]);
-  return powered;
+const subtract = function(a, b) {
+  return a - b;
+};
+
+const multiply = function(a, b) {
+  return a *= b
+};
+
+const divide = function(a, b) {
+  return a /= b;
+};
+
+const power = function(a, b) {
+  return Math.pow(a, b);
 };
 
 // FACTORIAL // 
-const factorial = function(values) {
-  value = values[0];
-  if (value === 0){
-    answer = 1;
+const factorial = function(a) {
+  if (a === 0){
+    return 1;
   }
   else {
-    answer = FirstFactorial(value);
+    return FirstFactorial(a);
   }
-  return answer;
 };
 
 // Recursive function, starting on num, it goes down to 1, then bubbles up and multiplies by every consecutive number

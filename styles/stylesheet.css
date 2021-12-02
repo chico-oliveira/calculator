@@ -87,19 +87,22 @@ sup {
   justify-content: space-between;
   padding: 5px;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
 .operation {
   font-size: 1vw;
+  height: 1vw;
 }
 
 .current {
   font-size: 2vw;
 }
 
-.calculator > div:not(:first-child) {
-  width: 70px;
-  height: 50px;
+.calculator > button {
+  width: 80px;
+  height: 60px;
+  border-color: black;
   display: flex;
   justify-content: center;
   align-items: center;
