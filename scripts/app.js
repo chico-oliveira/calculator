@@ -17,8 +17,11 @@ const buttons = document.querySelectorAll("button");
 /////////////////
 
 buttons.forEach(button => {
-  button.addEventListener('click', pressingButton);
+  button.addEventListener('click', (e) => pressingButton(e.target));
 });
+
+// Listens for button presses
+window.addEventListener('keydown', pressingKey);
 
 ///////////////
 // FUNCTIONS //
@@ -29,31 +32,40 @@ window.onload = () => {
   updateDisplay();
 }
 
-function pressingButton(e) {
-  let currentButton = e.target.classList;
+function pressingKey(e){
+  const key = document.querySelector(`button[data-key="${e.keyCode}"]`);
+
+  // If key corresponds to one of the buttons, it calls pressingButton function
+  if (key) {
+    pressingButton(key);
+  }
+}
+
+function pressingButton(button) {
+  let buttonClass = button.classList;
 
   // Delete button
-  if (currentButton.contains("delete")){
+  if (buttonClass.contains("delete")){
     Delete();
   }
   // Clear button
-  else if (currentButton.contains("clear")){
+  else if (buttonClass.contains("clear")){
     Clear();
     displayString = "0";
   }
   // Checks if maximum number of digits has been input before inserting more values
   else if(displayString.length <= 12){
     // Number Button
-    if (currentButton.contains("number")){
-      addNumber(e);
+    if (buttonClass.contains("number")){
+      addNumber(button);
     }
     // Decimal Button
-    else if (currentButton.contains("decimal")){
-      addDecimal(e);
+    else if (buttonClass.contains("decimal")){
+      addDecimal(button);
     }
     // One of the Mathematical Operators
     else {
-      addOperator(e);
+      addOperator(button);
     }
   }
   updateDisplay();
@@ -74,27 +86,27 @@ function Clear(){
   previousString = "";
 }
 
-function addNumber(e){
+function addNumber(button){
   if (displayString === "0"){
-    displayString = e.target.textContent;
+    displayString = button.textContent;
   }
   else {
-    displayString += e.target.textContent;
+    displayString += button.textContent;
   }
 }
 
 // Only adds decimal point if one doesn't already exist
-function addDecimal(e) {
+function addDecimal(button) {
     if (!displayString.includes(".")){
-      displayString += e.target.textContent;
+      displayString += button.textContent;
     }
 }
 
-function addOperator(e) {
+function addOperator(button) {
   // Adds current value to previous value
   previousValue = currentValue;
 
-  let operatorID = e.target.getAttribute('id');
+  let operatorID = button.getAttribute('id');
 
   // Attributes different operator values depending on which button got pressed
   if (operatorID === "factorial"){
@@ -104,7 +116,7 @@ function addOperator(e) {
     operator = "^"
   }
   else {
-    operator = e.target.textContent;
+    operator = button.textContent;
   }
 
   // Passes current display to previous display
