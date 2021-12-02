@@ -71,11 +71,12 @@ sup {
 }
 
 .calculator {
+  width: 380px;
   padding: 20px;
   padding-top: 60px;
   display: grid;
-  grid-template-columns: auto auto auto auto;
-  grid-gap: 5px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 10px;
   align-items: center;
 }
 
@@ -100,8 +101,7 @@ sup {
 }
 
 .calculator > button {
-  width: 80px;
-  height: 60px;
+  padding: 20px 4px;
   border-color: black;
   display: flex;
   justify-content: center;

@@ -8,6 +8,8 @@ let currentValue;
 let previousValue;
 let operator;
 let answer;
+let append = false;
+let resetLast = false;
 
 const currentDisplay = document.querySelector(".current");
 const operationDisplay = document.querySelector(".operation");
@@ -22,7 +24,7 @@ buttons.forEach(button => {
 });
 
 // Listens for button presses
-window.addEventListener('keydown', pressingKey);
+window.addEventListener('keydown', pressingKeyboard);
 
 ///////////////
 // FUNCTIONS //
@@ -33,7 +35,7 @@ window.onload = () => {
   updateDisplay();
 }
 
-function pressingKey(e){
+function pressingKeyboard(e){
   let key;
 
   // Matches multiple keys that perform the same function 
@@ -74,6 +76,12 @@ function pressingButton(button) {
       break;
     case "operator":
       addOperator(button);
+      break;
+    case "equals":
+      // Only evaluates expression if there are new values
+      if(!answer){
+        Evaluate(button.textContent);
+      }
   }  
   updateDisplay();
 }
@@ -93,13 +101,14 @@ function Clear(){
   previousString = "";
   previousValue = null;
   operator = null;
-  operateNow = false;
+  append = false;
 }
 
 function addNumber(button){
   if (!maxDisplay()){
-    if (displayString === "0"){
+    if (displayString === "0" || !append){
       displayString = button.textContent;
+      append = true;
     }
     else {
       displayString += button.textContent;
@@ -111,49 +120,30 @@ function addNumber(button){
 function addDecimal(button) {
     if (!displayString.includes(".") && !maxDisplay()){
       displayString += button.textContent;
+      append = true;
     }
 }
 
 function addOperator(button) {
   let operatorID = button.getAttribute('id');
-  let newOperator;
+  let newOperator = "";
+  
+  // Changes div id into required maths operations where necessary
+  if (operatorID === "factorial") newOperator = "!";
+  else if (operatorID === "power") newOperator = "^";
+  else newOperator = button.textContent;
 
-  // Attributes different operator values depending on which button got pressed
-  switch(operatorID) {
-    case "factorial":
-      newOperator = "!";
-      answer = operate(newOperator);
-      break;
-    case "equals":
-      newOperator = button.textContent;
-      if (operator) {
-        answer = operate(operator);
-      }
-      else {
-        answer = operate(newOperator);
-      }
-      break;
-    case "power":
-      newOperator = "^";
-      if (operator) {
-        answer = operate(operator);
-      }
-    default:
-      newOperator = button.textContent;
-      if (operator){
-        answer = operate(operator);
-      }
-  }
-
-  if (operator || newOperator === "="){
-    let answer = operate();
-    updateVariables(answer);
-  }
-  else {
-    updateVariables(currentValue);
-  }
-
+  resetLast = true;
+  answer = null;
+  updateVariables(currentValue, newOperator);
   operator = newOperator;
+}
+
+function Evaluate(op){
+  operate(operator);
+
+  updateVariables(answer, op);
+  operator = null;
 }
 
 // Updates calculator display
@@ -163,36 +153,55 @@ function updateDisplay(){
   currentDisplay.textContent = displayString;
 }
 
-function updateVariables(displayValue) {
+function updateVariables(displayValue, symbol) {
   // Adds current value to previous value
   previousValue = currentValue;
 
   // Passes current display to previous display
-  displayString += operator;
-  previousString = `${displayString}`;
+  displayString += ` ${symbol} `;
+
+  // Adds to previous screen if evaluating, otherwise overwrites last operation
+  if(resetLast){
+    previousString = displayString;
+    resetLast = false;
+  }
+  else {
+    previousString += `${displayString}`;
+  }
 
   // Resets current value
   displayString = `${displayValue}`;
+  append = false;
 }
 
 // Calls different functions depending on operator
 function operate(mathOperation) {
+
   switch(mathOperation) {
     case "÷":
-      return divide(currentValue, previousValue);
-    case "*":
-      return multiply(currentValue, previousValue);
+       answer = divide(previousValue, currentValue);
+       break;
+    case "×":
+      answer = multiply(previousValue, currentValue);
+      break;
     case "+":
-      return add(currentValue, previousValue);
-    case "-":
-      return subtract(currentValue, previousValue);
+      answer = add(previousValue, currentValue);
+      break;
+    case "−":
+      answer = subtract(previousValue, currentValue);
+      break;
     case "^":
-      return power(currentValue, previousValue);
+      answer = power(previousValue, currentValue);
+      break;
     case "!":
-      return factorial(currentValue);
+      answer = factorial(currentValue);
+      break;
     default:
-      return currentValue;
+      answer = currentValue;
   } 
+
+  let calculation = `${previousValue} ${mathOperation} ${currentValue} = ${answer}`;
+  console.log(calculation);
 }
 
 // Mathematic Functions
@@ -222,7 +231,11 @@ const factorial = function(a) {
     return 1;
   }
   else {
-    return FirstFactorial(a);
+    let total = 1;
+    for (let i=a; i > 0; i--) {
+      total *= i;
+    }
+    return total;
   }
 };
 
@@ -233,5 +246,5 @@ function FirstFactorial(num) {
 // FACTORIAL //
 
 function maxDisplay() {
-  return displayString.length >= 12;
+  return displayString.length >= 13;
 }
