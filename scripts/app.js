@@ -6,7 +6,8 @@ let displayString = "0";
 let previousString = "";
 let currentValue;
 let previousValue;
-let operation;
+let operator;
+let answer;
 
 const currentDisplay = document.querySelector(".current");
 const operationDisplay = document.querySelector(".operation");
@@ -33,11 +34,26 @@ window.onload = () => {
 }
 
 function pressingKey(e){
-  const key = document.querySelector(`button[data-key="${e.keyCode}"]`);
+  let key;
+
+  // Matches multiple keys that perform the same function 
+  switch(e.key) {
+    case "Delete":  
+      key = "Escape";
+      break;
+    case "Enter":
+      key = "=";
+      break;
+    default:
+      key = e.key;
+  }  
+  
+  // Checks if one of the calculator button is associated with the pressed key 
+  const button = document.querySelector(`button[data-key="${key}"]`);
 
   // If key corresponds to one of the buttons, it calls pressingButton function
-  if (key) {
-    pressingButton(key);
+  if (button) {
+    pressingButton(button);
   }
 }
 
@@ -75,6 +91,9 @@ function Delete(){
 function Clear(){
   displayString = "0";
   previousString = "";
+  previousValue = null;
+  operator = null;
+  operateNow = false;
 }
 
 function addNumber(button){
@@ -96,28 +115,45 @@ function addDecimal(button) {
 }
 
 function addOperator(button) {
-  // Adds current value to previous value
-  previousValue = currentValue;
-
   let operatorID = button.getAttribute('id');
+  let newOperator;
 
   // Attributes different operator values depending on which button got pressed
-  if (operatorID === "factorial"){
-    operator = "!";
+  switch(operatorID) {
+    case "factorial":
+      newOperator = "!";
+      answer = operate(newOperator);
+      break;
+    case "equals":
+      newOperator = button.textContent;
+      if (operator) {
+        answer = operate(operator);
+      }
+      else {
+        answer = operate(newOperator);
+      }
+      break;
+    case "power":
+      newOperator = "^";
+      if (operator) {
+        answer = operate(operator);
+      }
+    default:
+      newOperator = button.textContent;
+      if (operator){
+        answer = operate(operator);
+      }
   }
-  else if (operatorID === "power"){
-    operator = "^"
+
+  if (operator || newOperator === "="){
+    let answer = operate();
+    updateVariables(answer);
   }
   else {
-    operator = button.textContent;
+    updateVariables(currentValue);
   }
 
-  // Passes current display to previous display
-  displayString += operator;
-  previousString = `${displayString}`;
-
-  // Resets current value
-  displayString = "0";
+  operator = newOperator;
 }
 
 // Updates calculator display
@@ -127,30 +163,36 @@ function updateDisplay(){
   currentDisplay.textContent = displayString;
 }
 
+function updateVariables(displayValue) {
+  // Adds current value to previous value
+  previousValue = currentValue;
+
+  // Passes current display to previous display
+  displayString += operator;
+  previousString = `${displayString}`;
+
+  // Resets current value
+  displayString = `${displayValue}`;
+}
+
 // Calls different functions depending on operator
-function operate() {
-  let answer = 0;
-      
-  switch(operator) {
+function operate(mathOperation) {
+  switch(mathOperation) {
     case "÷":
-        answer = divide(currentValue, previousValue);
-        break;
+      return divide(currentValue, previousValue);
     case "*":
-        answer = multiply(currentValue, previousValue);
-        break;
+      return multiply(currentValue, previousValue);
     case "+":
-        answer = add(currentValue, previousValue);
-        break;
+      return add(currentValue, previousValue);
     case "-":
-        answer = subtract(currentValue, previousValue);
-        break;
+      return subtract(currentValue, previousValue);
     case "^":
-        answer = power(currentValue, previousValue);
-        break;
+      return power(currentValue, previousValue);
     case "!":
-        answer = factorial(currentValue);
-  }  
-  console.log(answer);
+      return factorial(currentValue);
+    default:
+      return currentValue;
+  } 
 }
 
 // Mathematic Functions
