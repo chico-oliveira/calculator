@@ -7,9 +7,8 @@ let previousString = "";
 let currentValue;
 let previousValue;
 let operator;
-let answer;
 let append = false;
-let lastButton;
+let lastButton = null;
 
 const currentDisplay = document.querySelector(".current");
 const operationDisplay = document.querySelector(".operation");
@@ -67,7 +66,6 @@ function pressingButton(button) {
       break;
     case "clear":
       Clear();
-      append = false;
       break;
     case "decimal":
       addDecimal(button);
@@ -82,12 +80,8 @@ function pressingButton(button) {
       append = false;
       break;
     case "equals":
-      // Only evaluates expression if there are new values
-      if(!(lastButton.getAttribute("class") === "equals")){
-        Evaluate(button);
-        append = false;
-        operator = null;
-      }
+      Evaluate();
+      append = false;
   }  
   updateDisplay();
   lastButton = button;
@@ -101,9 +95,12 @@ function Delete(){
   else {
     displayString = "0";
   }
+
+  // Updates current value
   currentValue = parseFloat(displayString);
 }
 
+// Clear display and variables
 function Clear(){
   displayString = "0";
   previousString = "";
@@ -112,6 +109,7 @@ function Clear(){
   operator = null;
 }
 
+// Adds number to display
 function addNumber(button){
   if (!maxDisplay()){
     if (displayString === "0" || !append){
@@ -126,56 +124,64 @@ function addNumber(button){
 
 // Only adds decimal point if one doesn't already exist
 function addDecimal(button) {
-    if (!displayString.includes(".") && !maxDisplay()){
-      displayString += button.textContent;
-    }
-    currentValue = parseFloat(displayString);
+  // If it can't append decimal point (after clear or evaluation), resets to 0.
+  if(!append) {
+    displayString = "0.";
+  }
+  else if (!displayString.includes(".") && !maxDisplay()) {
+    displayString += button.textContent;
+  }
+  currentValue = parseFloat(displayString);
 }
 
+// Adds new operator
 function newOperator(button) {
   let operatorID = button.getAttribute('id');
   let newOperator = "";
+
+  // When an operator is added it wipes previous string
+  previousString = "";
   
   // Changes div id into required maths operations where necessary
   if (operatorID === "power") newOperator = "^";
   else newOperator = button.textContent;
 
-    previousString = "";
-    if (operator) {
-      // Doesn't calculate expression if an operator is pressed twice 
-      if(!(lastButton.getAttribute("class") === "operator")){
-        Evaluate(button);
-      }
-      
-      displayString = `${currentValue}`
-      displayString += ` ${newOperator} `;
-      previousString += displayString;
-      displayString = currentValue.toString();
+  // If it's (Value + Operation + Value + Operation) then it evaluates the pair of values
+  if (operator) {
+
+    // Updates the operation to be executed
+    displayString = `${currentValue}`;
+
+    // Only calculates expression if an operator button has not been pressed twice in a row 
+    if(!(lastButton.getAttribute("class") === "operator")){
+      currentValue = operate(operator);
     }
-    else {
-      previousValue = currentValue;
-      displayString += ` ${newOperator} `;
-      previousString += displayString;
-      displayString = currentValue.toString();
-    }
+  }
+
+  // Updates display strings and values
+  updateStrings(newOperator);
+  previousValue = currentValue;
   operator = newOperator;
 }
 
-function Evaluate(button){
-  operate(operator);
+function Evaluate(){
+  // Only evaluates expression if there are new values
+  if(!(lastButton.getAttribute("class") === "equals")){
+    currentValue = operate(operator);
 
-  switch (button.getAttribute("class")){
-    case "equals":
-      currentValue = answer;
+    // After an equals is pressed, resets the operator
+    operator = null;
 
-      displayString += ` = `;
-      previousString += displayString;
-      displayString = currentValue.toString();
-
-    case "operator": 
-      previousValue = answer;
-      currentValue = answer;
+    // Updates display strings
+    updateStrings("=");
   }
+}
+
+// Updates strings that are then put on the calculator display
+function updateStrings(symbol) {
+  displayString += ` ${symbol} `;
+  previousString += displayString;
+  displayString = currentValue.toString();
 }
 
 // Updates calculator display
@@ -189,54 +195,30 @@ function operate(mathOperation) {
 
   switch(mathOperation) {
     case "÷":
-      answer = divide(previousValue, currentValue);
-      break;
+      return divide(previousValue, currentValue);
     case "×":
-      answer = multiply(previousValue, currentValue);
-      break;
+      return multiply(previousValue, currentValue);
     case "+":
-      answer = add(previousValue, currentValue);
-      break;
+      return add(previousValue, currentValue);
     case "−":
-      answer = subtract(previousValue, currentValue);
-      break;
+      return subtract(previousValue, currentValue);
     case "^":
-      answer = power(previousValue, currentValue);
-      break;
+      return power(previousValue, currentValue);
     case "!":
-      answer = factorial(currentValue);
-      break;
+      return factorial(currentValue);
     default:
-      answer = currentValue;
       previousString = "";
+      return currentValue;
   } 
-
-  let calculation = `${previousValue} ${mathOperation} ${currentValue} = ${answer}`;
-  console.log(calculation);
 }
 
 // Mathematic Functions
-const add = function(a, b) {
-  return a + b;
-};
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a *= b;
+const divide = (a, b) => a /= b;
+const power = (a, b) => Math.pow(a, b);
 
-const subtract = function(a, b) {
-  return a - b;
-};
-
-const multiply = function(a, b) {
-  return a *= b
-};
-
-const divide = function(a, b) {
-  return a /= b;
-};
-
-const power = function(a, b) {
-  return Math.pow(a, b);
-};
-
-// FACTORIAL // 
 const factorial = function(a) {
   if (a === 0){
     return 1;
@@ -250,12 +232,8 @@ const factorial = function(a) {
   }
 };
 
-// Recursive function, starting on num, it goes down to 1, then bubbles up and multiplies by every consecutive number
-function FirstFactorial(num) {
-  return (num === 1 ? 1 : num * FirstFactorial(num - 1));
-}
-// FACTORIAL //
 
+// Extra Functions //
 function maxDisplay() {
   return displayString.length >= 13;
 }
