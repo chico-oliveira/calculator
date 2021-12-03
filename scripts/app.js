@@ -9,7 +9,7 @@ let previousValue;
 let operator;
 let answer;
 let append = false;
-let resetLast = false;
+let lastButton;
 
 const currentDisplay = document.querySelector(".current");
 const operationDisplay = document.querySelector(".operation");
@@ -67,23 +67,30 @@ function pressingButton(button) {
       break;
     case "clear":
       Clear();
+      append = false;
       break;
     case "decimal":
       addDecimal(button);
+      append = true;
       break;
     case "number":
       addNumber(button);
+      append = true;
       break;
     case "operator":
-      addOperator(button);
+      newOperator(button);
+      append = false;
       break;
     case "equals":
       // Only evaluates expression if there are new values
-      if(!answer){
-        Evaluate(button.textContent);
+      if(!(lastButton.getAttribute("class") === "equals")){
+        Evaluate(button);
+        append = false;
+        operator = null;
       }
   }  
   updateDisplay();
+  lastButton = button;
 }
 
 // Deletes values and changes to 0 if last digit is deleted
@@ -94,84 +101,87 @@ function Delete(){
   else {
     displayString = "0";
   }
+  currentValue = parseFloat(displayString);
 }
 
 function Clear(){
   displayString = "0";
   previousString = "";
+  currentValue = 0;
   previousValue = null;
   operator = null;
-  append = false;
 }
 
 function addNumber(button){
   if (!maxDisplay()){
     if (displayString === "0" || !append){
       displayString = button.textContent;
-      append = true;
     }
     else {
       displayString += button.textContent;
     }
   }
+  currentValue = parseFloat(displayString);
 }
 
 // Only adds decimal point if one doesn't already exist
 function addDecimal(button) {
     if (!displayString.includes(".") && !maxDisplay()){
       displayString += button.textContent;
-      append = true;
     }
+    currentValue = parseFloat(displayString);
 }
 
-function addOperator(button) {
+function newOperator(button) {
   let operatorID = button.getAttribute('id');
   let newOperator = "";
   
   // Changes div id into required maths operations where necessary
-  if (operatorID === "factorial") newOperator = "!";
-  else if (operatorID === "power") newOperator = "^";
+  if (operatorID === "power") newOperator = "^";
   else newOperator = button.textContent;
 
-  resetLast = true;
-  answer = null;
-  updateVariables(currentValue, newOperator);
+    previousString = "";
+    if (operator) {
+      // Doesn't calculate expression if an operator is pressed twice 
+      if(!(lastButton.getAttribute("class") === "operator")){
+        Evaluate(button);
+      }
+      
+      displayString = `${currentValue}`
+      displayString += ` ${newOperator} `;
+      previousString += displayString;
+      displayString = currentValue.toString();
+    }
+    else {
+      previousValue = currentValue;
+      displayString += ` ${newOperator} `;
+      previousString += displayString;
+      displayString = currentValue.toString();
+    }
   operator = newOperator;
 }
 
-function Evaluate(op){
+function Evaluate(button){
   operate(operator);
 
-  updateVariables(answer, op);
-  operator = null;
+  switch (button.getAttribute("class")){
+    case "equals":
+      currentValue = answer;
+
+      displayString += ` = `;
+      previousString += displayString;
+      displayString = currentValue.toString();
+
+    case "operator": 
+      previousValue = answer;
+      currentValue = answer;
+  }
 }
 
 // Updates calculator display
 function updateDisplay(){
-  currentValue = parseFloat(displayString);
   operationDisplay.textContent = previousString;
   currentDisplay.textContent = displayString;
-}
-
-function updateVariables(displayValue, symbol) {
-  // Adds current value to previous value
-  previousValue = currentValue;
-
-  // Passes current display to previous display
-  displayString += ` ${symbol} `;
-
-  // Adds to previous screen if evaluating, otherwise overwrites last operation
-  if(resetLast){
-    previousString = displayString;
-    resetLast = false;
-  }
-  else {
-    previousString += `${displayString}`;
-  }
-
-  // Resets current value
-  displayString = `${displayValue}`;
-  append = false;
 }
 
 // Calls different functions depending on operator
@@ -179,8 +189,8 @@ function operate(mathOperation) {
 
   switch(mathOperation) {
     case "÷":
-       answer = divide(previousValue, currentValue);
-       break;
+      answer = divide(previousValue, currentValue);
+      break;
     case "×":
       answer = multiply(previousValue, currentValue);
       break;
@@ -198,6 +208,7 @@ function operate(mathOperation) {
       break;
     default:
       answer = currentValue;
+      previousString = "";
   } 
 
   let calculation = `${previousValue} ${mathOperation} ${currentValue} = ${answer}`;

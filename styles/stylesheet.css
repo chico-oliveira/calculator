@@ -108,6 +108,11 @@ sup {
   align-items: center;
 }
 
+#zero {
+  grid-column: 1 / span 2;
+  grid-row: 6;
+}
+
 /** Footer section
 */
 
