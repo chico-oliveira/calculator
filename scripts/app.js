@@ -4,7 +4,7 @@
 
 let displayString = "0";
 let previousString = "";
-let currentValue;
+let currentValue = 0;
 let previousValue;
 let operator;
 let append = false;
@@ -62,7 +62,7 @@ function pressingButton(button) {
   // Checks what class of button was pressed
   switch(button.getAttribute("class")) {
     case "delete":  
-      Delete();
+      if(append) Delete();
       break;
     case "clear":
       Clear();
@@ -111,13 +111,11 @@ function Clear(){
 
 // Adds number to display
 function addNumber(button){
-  if (!maxDisplay()){
-    if (displayString === "0" || !append){
-      displayString = button.textContent;
-    }
-    else {
-      displayString += button.textContent;
-    }
+  if (displayString === "0" || !append){
+    displayString = button.textContent;
+  }
+  else if (!maxDisplay()){
+    displayString += button.textContent;
   }
   currentValue = parseFloat(displayString);
 }
@@ -166,7 +164,7 @@ function newOperator(button) {
 
 function Evaluate(){
   // Only evaluates expression if there are new values
-  if(!(lastButton.getAttribute("class") === "equals")){
+  if(lastButton == null || !(lastButton.getAttribute("class") === "equals")){
     currentValue = operate(operator);
 
     // After an equals is pressed, resets the operator
@@ -186,6 +184,7 @@ function updateStrings(symbol) {
 
 // Updates calculator display
 function updateDisplay(){
+  checkLength();
   operationDisplay.textContent = previousString;
   currentDisplay.textContent = displayString;
 }
@@ -235,5 +234,38 @@ const factorial = function(a) {
 
 // Extra Functions //
 function maxDisplay() {
-  return displayString.length >= 13;
+  return displayString.length > 12;
+}
+
+// If value exceeds maximum display length, adjusts display value
+function checkLength() {
+  if (maxDisplay()) {
+    if (displayString.includes('.')) {
+
+    }
+    else {
+      
+    }
+    let tempString = displayString;
+    extra = tempString.length - 13;
+    let e = "";
+    
+    // If value has an exponential, it adjusts the value
+    if (tempString.includes('e')){
+      e = tempString.slice(tempString.indexOf('e'));
+      tempString = tempString.slice(0, tempString.indexOf('e'));
+  
+      let expon = e.slice(2);
+      let correctedExpon = parseInt(expon) + extra;
+      e = e.replace(`${expon}`, `${correctedExpon}`);
+    }
+    else {
+      
+    }
+  
+    let shortenedString = tempString.slice(0, tempString.length - extra);
+    shortenedString += e;
+
+    displayString = shortenedString;
+  }
 }
