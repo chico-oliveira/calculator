@@ -147,13 +147,15 @@ function newOperator(button) {
   // If it's (Value + Operation + Value + Operation) then it evaluates the pair of values
   if (operator) {
 
-    // Updates the operation to be executed
-    displayString = `${currentValue}`;
-
     // Only calculates expression if an operator button has not been pressed twice in a row 
     if(!(lastButton.getAttribute("class") === "operator")){
       currentValue = operate(operator);
+      // If it is an invalid calculation, it resets calculator
+      if(!currentValue) {displayError(); return;}
     }
+
+    // Updates the operation to be executed
+    displayString = `${currentValue}`;
   }
 
   // Updates display strings and values
@@ -165,7 +167,10 @@ function newOperator(button) {
 function Evaluate(){
   // Only evaluates expression if there are new values
   if(lastButton == null || !(lastButton.getAttribute("class") === "equals")){
-    currentValue = operate(operator);
+    currentValue = operate(operator);      
+    
+    // If it is an invalid calculation, it resets calculator
+    if(!currentValue) displayError();{displayError(); return;}
 
     // After an equals is pressed, resets the operator
     operator = null;
@@ -214,9 +219,11 @@ function operate(mathOperation) {
 // Mathematic Functions
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
+const divide = (a, b) => (b==0 ? null : a /= b);  // If you try to divide by 0 it returns a null
 const multiply = (a, b) => a *= b;
-const divide = (a, b) => a /= b;
 const power = (a, b) => Math.pow(a, b);
+
+
 
 const factorial = function(a) {
   if (a === 0){
@@ -235,6 +242,14 @@ const factorial = function(a) {
 // Extra Functions //
 function maxDisplay() {
   return displayString.length > 12;
+}
+
+// Error message for impossible calculations
+function displayError() {
+  if (operator === "÷") {
+    console.log("Divide by 0 again. Divide by 0 again, I dare you, I double dare you, divide by 0 one more Goddamn time!");
+  }
+  Clear();
 }
 
 // If value exceeds maximum display length, adjusts display value
@@ -269,3 +284,5 @@ function checkLength() {
     displayString = shortenedString;
   }
 }
+
+
