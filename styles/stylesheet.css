@@ -4,12 +4,22 @@ Imports
 #######
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 /* 
 #########
 Variables
 #########
 */
+
+:root {
+  --bg: #122C34;
+  --indigo: #224870;
+  --blue: #2A4494;
+  --light-blue: #4EA5D9;
+  --turqoise: #44CFCB; 
+  --mint: #A0EEC0;
+}
 
 
 /*
@@ -24,6 +34,8 @@ html, body {
 
 body {
   height: 100vh;
+  background-color: var(--bg);
+  font-family: 'Lato', sans-serif;
 }
 
 .content {
@@ -33,8 +45,8 @@ body {
 }
 
 h1 {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 8vw;
+  font-size: 100px;
+  color: var(--mint);
 }
 
 /* 
@@ -76,8 +88,9 @@ sup {
   padding-top: 60px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 10px;
+  grid-gap: 3px;
   align-items: center;
+  background-color: var(--indigo);
 }
 
 .display {
@@ -89,10 +102,11 @@ sup {
   padding: 5px;
   gap: 10px;
   margin-bottom: 20px;
+  background-color: var(--light-blue);
 }
 
 .operation {
-  font-size: 1vw;
+  font-size: 16px;
   height: 1vw;
 }
 
@@ -106,11 +120,17 @@ sup {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 4px;
+  background-color: var(--turqoise);
 }
 
 #zero {
   grid-column: 1 / span 2;
   grid-row: 6;
+}
+
+.calculator .number, .calculator .decimal {
+  background-color: var(--light-blue);
 }
 
 /** Footer section
@@ -124,6 +144,7 @@ footer {
   justify-content: center;
   gap: 10px;
   font-weight: bold;
+  color: var(--mint);
 }
 
 footer img {
@@ -134,4 +155,8 @@ footer img {
 footer a {
   display: flex;
   align-items: center;
+}
+
+footer a:hover {
+  filter: brightness(150%);
 }

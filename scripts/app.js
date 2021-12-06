@@ -170,7 +170,7 @@ function Evaluate(){
     currentValue = operate(operator);      
     
     // If it is an invalid calculation, it resets calculator
-    if(!currentValue) displayError();{displayError(); return;}
+    if(!currentValue) {displayError(); return;}
 
     // After an equals is pressed, resets the operator
     operator = null;
