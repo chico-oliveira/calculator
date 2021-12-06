@@ -46,7 +46,7 @@ body {
 }
 
 h1 {
-  font-size: 100px;
+  font-size: clamp(3.7rem, 10vw, 6.3rem);
   color: var(--mint);
 }
 
@@ -90,7 +90,7 @@ sup {
 }
 
 .calculator {
-  width: 380px;
+  width: clamp(320px, 50vw, 380px);
   padding: 20px;
   padding-top: 60px;
   display: grid;
@@ -123,7 +123,7 @@ sup {
 }
 
 .current {
-  font-size: 38px;
+  font-size: clamp(34px, 5vw, 38px);
 }
 
 #zero {
@@ -144,7 +144,7 @@ sup {
   border-radius: 4px;
   background-color: var(--turqoise);
   box-shadow: rgba(0, 0, 0, 0.24) 2px 2px 2px;
-  font-size: 20px;
+  font-size: clamp(17px, 3vw, 20px);
 }
 
 .calculator > button:hover {
@@ -194,6 +194,7 @@ sup {
   background-color: var(--turqoise);
   color: black;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .warning {
@@ -235,4 +236,40 @@ footer a {
 
 footer a:hover {
   filter: brightness(150%);
+}
+
+
+/*
+#############
+Media Queries
+#############
+*/
+
+@media (max-width: 880px) {
+
+  main {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .shortcuts, .warning {
+    max-width: 380px;
+    width: inherit;
+    font-size: 15px;
+  }
+
+  .keys {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .keys div{
+    justify-content: center;
+  }
+
+  footer p {
+    font-size: 14px;
+  }
 }
