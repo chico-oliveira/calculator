@@ -17,8 +17,21 @@
         </header>
         <main>
             <div class="shortcuts">
-                <h2>SHORTCUTS</h2>
-                <p>pwr = "p"</p>
+                <h2>Keyboard Shortcuts</h2>
+                <div class="keys">
+                    <div class="del-short">
+                        <p class="calc">Del</p>
+                        <p>Delete / Backspace</p>
+                    </div>
+                    <div class="pwr-short">
+                        <p class="calc">𝑥<sup><i>y</i></sup></p>
+                        <p>p</p> 
+                    </div>
+                    <div class="equals-short">
+                        <p class="calc">=</p>
+                        <p>Enter</p>
+                    </div>
+                </div>
             </div>
             <div class="calculator">
                 <div class="display">
@@ -26,7 +39,7 @@
                     <div class="current"></div>
                 </div>
                 <button data-key="Escape" class="clear"><span>Clear</span></button>
-                <button data-key="Backspace" class="delete"><span>Del</span></button>
+                <button data-key="Delete" class="delete"><span>Del</span></button>
                 <button data-key="p" class="operator" id="power">
                     <!-- within the span to keep supertext format despite flex -->
                     <span>𝑥<sup><i>y</i></sup></span> 

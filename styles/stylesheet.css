@@ -50,6 +50,12 @@ h1 {
   color: var(--mint);
 }
 
+h2 {
+  font-size: 20px;
+  color: var(--mint);
+  font-weight: 700;
+}
+
 /* 
 ################
 Main styles
@@ -92,7 +98,6 @@ sup {
   grid-gap: 5px;
   align-items: center;
   background-color: var(--indigo);
-  /* border-width: 2px; */
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.24) 3px 3px 6px;
   flex-shrink: 0;
@@ -108,7 +113,6 @@ sup {
   gap: 10px;
   margin-bottom: 20px;
   background-color: var(--light-blue);
-  /* border-width: 2px; */
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.24) 2px 2px 2px;
 }
@@ -139,8 +143,8 @@ sup {
   align-items: center;
   border-radius: 4px;
   background-color: var(--turqoise);
-  transition: 0.1s linear;
   box-shadow: rgba(0, 0, 0, 0.24) 2px 2px 2px;
+  font-size: 20px;
 }
 
 .calculator > button:hover {
@@ -148,12 +152,12 @@ sup {
   transition: 0.1s linear;
 }
 
-.calculator > button:hover span{
+.calculator > button:hover *{
   transform: translateY(-2px);
   transition: 0.1s linear;
 }
 
-.calculator > button:active{
+.calculator > button:active, .calculator > button:focus-visible{
   filter: brightness(80%);
   transition: 0.1s linear;
 }
@@ -172,6 +176,26 @@ sup {
   font-size: 18px;
 }
 
+.shortcuts h2{
+  margin-bottom: 15px;
+}
+
+.keys div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.shortcuts .calc {
+  margin: 2px;
+  padding: 8px 0;
+  width: 40px;
+  border-radius: 4px;
+  background-color: var(--turqoise);
+  color: black;
+  text-align: center;
+}
+
 .warning {
   visibility: hidden;
   text-align: center;
@@ -183,10 +207,6 @@ sup {
 
 .warning strong {
   color: var(--bold-mint);
-}
-
-.shortcuts {
-  justify-content: flex-end;
 }
 
 /** Footer section

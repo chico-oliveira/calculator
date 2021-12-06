@@ -40,8 +40,8 @@ function pressingKeyboard(e){
 
   // Matches multiple keys that perform the same function 
   switch(e.key) {
-    case "Delete":  
-      key = "Escape";
+    case "Backspace":  
+      key = "Delete";
       break;
     case "Enter":
       key = "=";
