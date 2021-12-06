@@ -13,13 +13,14 @@ let lastButton = null;
 const currentDisplay = document.querySelector(".current");
 const operationDisplay = document.querySelector(".operation");
 const buttons = document.querySelectorAll("button");
+const warningText = document.querySelector(".warning");
 
 /////////////////
 // DOM METHODS //
 /////////////////
 
 buttons.forEach(button => {
-  button.addEventListener('click', (e) => pressingButton(e.target));
+  button.addEventListener('click', (e) => pressingButton(e.currentTarget));
 });
 
 // Listens for button presses
@@ -59,6 +60,9 @@ function pressingKeyboard(e){
 }
 
 function pressingButton(button) {
+  // Reset any error text if a button is pressed
+  resetError();
+
   // Checks what class of button was pressed
   switch(button.getAttribute("class")) {
     case "delete":  
@@ -247,9 +251,13 @@ function maxDisplay() {
 // Error message for impossible calculations
 function displayError() {
   if (operator === "÷") {
-    console.log("Divide by 0 again. Divide by 0 again, I dare you, I double dare you, divide by 0 one more Goddamn time!");
+    warningText.classList.add("active");
   }
   Clear();
+}
+
+function resetError() {
+  warningText.classList.remove("active");
 }
 
 // If value exceeds maximum display length, adjusts display value

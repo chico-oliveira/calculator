@@ -16,33 +16,43 @@
             <h1>Calculator</h1>
         </header>
         <main>
+            <div class="shortcuts">
+                <h2>SHORTCUTS</h2>
+                <p>pwr = "p"</p>
+            </div>
             <div class="calculator">
                 <div class="display">
                     <div class="operation"></div>
                     <div class="current"></div>
                 </div>
-                <button data-key="Escape" class="clear">Clear</button>
-                <button data-key="Backspace" class="delete">Del</button>
+                <button data-key="Escape" class="clear"><span>Clear</span></button>
+                <button data-key="Backspace" class="delete"><span>Del</span></button>
                 <button data-key="p" class="operator" id="power">
                     <!-- within the span to keep supertext format despite flex -->
                     <span>𝑥<sup><i>y</i></sup></span> 
                 </button>
-                <button data-key="/" class="operator" id="divide">÷</button>
-                <button data-key="7" class="number">7</button>
-                <button data-key="8" class="number">8</button>
-                <button data-key="9" class="number">9</button>
-                <button data-key="*" class="operator" id="multiply">×</button>
-                <button data-key="4" class="number">4</button>
-                <button data-key="5" class="number">5</button>
-                <button data-key="6" class="number">6</button>
-                <button data-key="-" class="operator" id="substract">−</button>
-                <button data-key="1" class="number">1</button>
-                <button data-key="2" class="number">2</button>
-                <button data-key="3" class="number">3</button>
-                <button data-key="+" class="operator" id="add">+</button>
-                <button data-key="0" class="number" id="zero">0</button>
-                <button data-key="." class="decimal">.</button>
-                <button data-key="=" class="equals">=</button>
+                <button data-key="/" class="operator" id="divide"><span>÷</span></button>
+                <button data-key="7" class="number"><span>7</span></button>
+                <button data-key="8" class="number"><span>8</span></button>
+                <button data-key="9" class="number"><span>9</span></button>
+                <button data-key="*" class="operator" id="multiply"><span>×</span></button>
+                <button data-key="4" class="number"><span>4</span></button>
+                <button data-key="5" class="number"><span>5</span></button>
+                <button data-key="6" class="number"><span>6</span></button>
+                <button data-key="-" class="operator" id="substract"><span>-</span></button>
+                <button data-key="1" class="number"><span>1</span></button>
+                <button data-key="2" class="number"><span>2</span></button>
+                <button data-key="3" class="number"><span>3</span></button>
+                <button data-key="+" class="operator" id="add"><span>+</span></button>
+                <button data-key="0" class="number" id="zero"><span>0</span></button>
+                <button data-key="." class="decimal"><span>.</span></button>
+                <button data-key="=" class="equals"><span>=</span></button>
+            </div>
+            <div class="warning">
+                <p> <strong>Divide by 0</strong> again. <strong>Divide by 0</strong> again, I dare 
+                    you, I double dare you, <strong>Divide by 0</strong> one more 
+                    Goddamn time!
+                </p>
             </div>
         </main>
         <footer>

@@ -19,6 +19,7 @@ Variables
   --light-blue: #4EA5D9;
   --turqoise: #44CFCB; 
   --mint: #A0EEC0;
+  --bold-mint: #eefff5;
 }
 
 
@@ -60,6 +61,7 @@ Main styles
 
 header {
   padding: 10px;
+  padding-bottom: 30px;
   display: flex;
   justify-content: center;
 }
@@ -71,12 +73,11 @@ main {
   display: flex;
   flex-grow: 1;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+  gap: 15px;
 }
 
-.calculator, .calculator > * {
-  border-width: 2px;
-}
+/* Calculator */
 
 sup {
   font-size: x-small;
@@ -88,9 +89,13 @@ sup {
   padding-top: 60px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 3px;
+  grid-gap: 5px;
   align-items: center;
   background-color: var(--indigo);
+  /* border-width: 2px; */
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.24) 3px 3px 6px;
+  flex-shrink: 0;
 }
 
 .display {
@@ -103,15 +108,27 @@ sup {
   gap: 10px;
   margin-bottom: 20px;
   background-color: var(--light-blue);
+  /* border-width: 2px; */
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.24) 2px 2px 2px;
 }
 
 .operation {
   font-size: 16px;
-  height: 1vw;
+  height: 16px;
 }
 
 .current {
-  font-size: 2vw;
+  font-size: 38px;
+}
+
+#zero {
+  grid-column: 1 / span 2;
+  grid-row: 6;
+}
+
+.calculator .number, .calculator .decimal {
+  background-color: var(--light-blue);
 }
 
 .calculator > button {
@@ -122,15 +139,54 @@ sup {
   align-items: center;
   border-radius: 4px;
   background-color: var(--turqoise);
+  transition: 0.1s linear;
+  box-shadow: rgba(0, 0, 0, 0.24) 2px 2px 2px;
 }
 
-#zero {
-  grid-column: 1 / span 2;
-  grid-row: 6;
+.calculator > button:hover {
+  filter: brightness(90%);
+  transition: 0.1s linear;
 }
 
-.calculator .number, .calculator .decimal {
-  background-color: var(--light-blue);
+.calculator > button:hover span{
+  transform: translateY(-2px);
+  transition: 0.1s linear;
+}
+
+.calculator > button:active{
+  filter: brightness(80%);
+  transition: 0.1s linear;
+}
+
+/* Texts */
+
+.shortcuts, .warning {
+  width: 380px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  color: var(--mint);
+  font-size: 18px;
+}
+
+.warning {
+  visibility: hidden;
+  text-align: center;
+}
+
+.warning.active{
+  visibility: visible;
+}
+
+.warning strong {
+  color: var(--bold-mint);
+}
+
+.shortcuts {
+  justify-content: flex-end;
 }
 
 /** Footer section
